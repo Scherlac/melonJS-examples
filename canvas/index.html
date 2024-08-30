@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>HTML5 Canvas - Draw a Rectangle</h1>
+
+<canvas id="myCanvas" width="1500" height="600" style="border:1px solid black;">
+Sorry, your browser does not support canvas.
+</canvas>
+
+<script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "purple";
+    ctx.fillRect(30,0,150,75);
+
+    // rajzolj egy kitöltött kék körlapot
+    ctx.beginPath();
+    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+    ctx.fillStyle = "blue";
+    ctx.fill();
+
+    // egyedi zöld: zöldföld" színkód: #556B2F
+
+    // Arial betűtípus, 30px betű magassága pixelben
+    const textHeight = 30;
+
+    // soremeles: 5 pixel
+    const lineHeight = textHeight + 5;
+
+    //szöveg feliratot írj a canvasra szöveg: "Hello World!"
+    ctx.font = `${textHeight}px Arial`;
+    ctx.fillStyle = "#556B2F" ;
+    ctx.fillText("Helló 🚁", 200, 500);
+
+
+    // lista "a", "b" , "c" szövegekkel
+    const list = ["alma", "béka", "cékla", "dénár", "elefánt", "fűrész", "gép", "ház", "íj", "jég", "kő", "ló", "málna", "nád", "óra", "papír", "róka", "sör", "tó", "út", "víz", "xilofon", "yoyo", "zöld"];
+    var xPos = 100;
+    var yPos = 150;
+    list.forEach((item, index) => {
+        // szöveg szélesség pixelben
+        const textWidth = ctx.measureText(item).width;
+        if (xPos + textWidth > (canvas.width/2)) {
+            xPos = 100;
+            yPos += lineHeight;
+        }
+        ctx.fillText(item, xPos, yPos);
+        xPos += textWidth + 10;
+
+    });
+
+    const clockX = 50;
+    const clockY = 40;
+
+    // kimásoljuk a canvas egy területét
+    const imgData = ctx.getImageData(clockX, clockY, 500, 30);
+
+    const timeInterval = 300;
+
+    function fetchAndDisplayTime() {
+        //requestAnimationFrame(fetchAndDisplayTime);
+        setTimeout(fetchAndDisplayTime, timeInterval);
+
+        const time = new Date().toLocaleTimeString();
+
+        ctx.putImageData(imgData, clockX, clockY);
+
+        // // draw white rectangle
+        // ctx.fillStyle = "white";
+        // ctx.fillRect(100, 100, 500, 30);
+
+        // idő színe piros
+        ctx.fillStyle = "red";
+        ctx.fillText(time, clockX, clockY+30);
+
+
+        // fetch("http://worldtimeapi.org/api/timezone/Europe/Budapest")
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         //console.log(data);
+        //         const time = data.datetime;
+
+        //         // clear canvas
+        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        //         // visszaállítjuk a canvas eredeti tartalmát
+        //         //ctx.putImageData(imgData, 100, 100);
+                
+        //         ctx.fillText(time, 100, 100);
+        //     });
+    }
+
+    // Hívjuk meg a függvényt 800ms-onként
+    //setTimeout(fetchAndDisplayTime, timeInterval);
+    fetchAndDisplayTime();
+
+
+</script>
+
+</body>
+</html>
+
