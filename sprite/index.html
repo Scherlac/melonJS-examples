@@ -9,7 +9,8 @@
         <div id="screen"></div>
         <!-- script -->
         <script type="module">
-            import * as me from "https://cdn.jsdelivr.net/npm/melonjs/+esm";
+            import * as me from "https://cdn.jsdelivr.net/npm/melonjsx/+esm";
+            //import * as me from "./melonjs.module.js";
             
             me.device.onReady(function () {
                 // Initialize the video.
@@ -33,7 +34,7 @@
                         // change to the default stage
                         // Note: force change now since we are adding things straight away
                         // outside of a proper stage object
-                        me.state.change(me.state.DEFAULT, true);
+                        //me.state.change(me.state.DEFAULT, true);
 
                         // create 2 sprite instances
                         var bg_sprite = new me.Sprite(
@@ -43,7 +44,8 @@
                                 anchorPoint : new me.Vector2d(0.5, 0.5)
                         });
                         // background is semi transparent
-                        bg_sprite.alpha = 0.5;
+                        bg_sprite.alpha = 0.1;
+                        bg_sprite.scale(1.5);
 
                         // create 2 sprite instances
                         var left_sprite = new me.Sprite(
@@ -52,7 +54,9 @@
                                 image : "monster",
                                 anchorPoint : new me.Vector2d(0.5, 0.5)
                         });
-                        left_sprite.scale(0.25);
+                        left_sprite.scale(0.5);
+                        left_sprite.flipX(true);
+                        left_sprite.flipY(true);
 
                         var right_sprite = new me.Sprite(
                             me.game.viewport.width / 2 + 125,
@@ -63,7 +67,7 @@
                         right_sprite.scale(0.75);
 
                         // add a gray background layer
-                        me.game.world.addChild(new me.ColorLayer("background", "#202020"));
+                        me.game.world.addChild(new me.ColorLayer("background", "#000020"));
 
                         // add all sprites to the scene
                         me.game.world.addChild(bg_sprite);
@@ -72,14 +76,35 @@
 
                         // subscribe to the main game loop event
                         me.event.on(me.event.GAME_UPDATE, () => {
-                            bg_sprite.rotate(0.0125);
-                            left_sprite.rotate(0.05);
+                            bg_sprite.rotate(0.0060);
+                            //left_sprite.rotate(0.05);
                             right_sprite.rotate(-0.05);
 
                         });
+
+                        // light follow the mouse
+                        me.input.registerPointerEvent("pointermove", me.game.viewport, (event) => {
+                            left_sprite.rotateTo({ x: event.gameX, y: event.gameY });
+                            // const angle = left_sprite.angleTo({ x: event.gameX, y: event.gameY });
+                            // var change = angle - left_sprite.direction;
+                            // if (left_sprite.isFlippedX ^ left_sprite.isFlippedY) {
+                            //     change = -change;
+                            // }
+                            // left_sprite.rotate(change);
+                            // left_sprite.direction = angle;
+                            //whiteLight.centerOn(event.gameX, event.gameY);
+                        });
+
+                        // flip the sprite on pointerdown
+                        me.input.registerPointerEvent("pointerdown", me.game.viewport, (event) => {
+                            left_sprite.flipY(!left_sprite.isFlippedY);
+                        });
+
                     }
                 );
             });
+
+
         </script>
     </body>
 </html>
